@@ -774,10 +774,9 @@ function RuleBreakdown({ loop }) {
   const [open, setOpen] = useState(false)
   const breakdown = loop.ruleBreakdown || []
   const matched   = breakdown.filter(r => r.matched)
-  const missed    = breakdown.filter(r => !r.matched && r.enabled)
 
   return (
-    <div style={{ marginTop: 8 }}>
+    <div style={{ marginTop: 0 }}>
       <button
         onClick={() => setOpen(o => !o)}
         style={{
@@ -798,7 +797,7 @@ function RuleBreakdown({ loop }) {
 
       {open && (
         <div style={{ marginTop: 8, background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 8, overflow: 'hidden' }}>
-          {matched.length > 0 && (
+          {matched.length > 0 ? (
             <div>
               <div style={{ padding: '6px 12px', background: '#fff5f5', borderBottom: '1px solid #fecaca', fontSize: 10, fontWeight: 700, color: '#dc2626', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                 Matched rules
@@ -816,25 +815,8 @@ function RuleBreakdown({ loop }) {
                 </div>
               ))}
             </div>
-          )}
-          {missed.length > 0 && (
-            <div>
-              <div style={{ padding: '6px 12px', background: '#f8fafc', borderBottom: '1px solid #e2e8f0', fontSize: 10, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                Not matched
-              </div>
-              {missed.map(r => (
-                <div key={r.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '5px 12px', borderBottom: '1px solid #f1f5f9', opacity: 0.6 }}>
-                  <span style={{ fontSize: 11, color: '#94a3b8', minWidth: 28, textAlign: 'right' }}>
-                    {r.score_delta > 0 ? '+' : ''}{r.score_delta}
-                  </span>
-                  <span style={{ fontSize: 11, color: '#64748b', flex: 1 }}>{r.name}</span>
-                  <span style={{ fontSize: 10, color: '#94a3b8', background: '#f1f5f9', padding: '1px 6px', borderRadius: 4 }}>{r.condition}</span>
-                  {r.actualValue !== null && (
-                    <span style={{ fontSize: 10, color: '#cbd5e1' }}>actual: {r.actualValue}</span>
-                  )}
-                </div>
-              ))}
-            </div>
+          ) : (
+            <div style={{ padding: '8px 12px', fontSize: 11, color: '#94a3b8' }}>No rules matched</div>
           )}
         </div>
       )}
