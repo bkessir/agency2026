@@ -191,7 +191,7 @@ function MainApp() {
             AIM Pronghorn 404 <span style={{ color: "#C47A2C" }}>Agency 2026</span>
           </div>
         </div>
-        <div style={{ fontSize: 11, color: "#94a3b8" }}>CRA T3010 · 2020–2024 · ~85K Registered Charities</div>
+        <div style={{ fontSize: 11, color: "#94a3b8" }}>CRA T3010 · 2020–2024 · ~85K Registered Charities · <span style={{ color: "#C47A2C" }}>v1.1</span></div>
       </header>
 
       {/* Below header: sidebar + content */}
