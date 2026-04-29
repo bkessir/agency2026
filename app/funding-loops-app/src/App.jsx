@@ -8,6 +8,7 @@ import EvaluationRules from "./components/EvaluationRules.jsx"
 import Services from "./components/Services.jsx"
 import IntroVideoModal from "./components/IntroVideoModal.jsx"
 import AIAnalysis from "./components/AIAnalysis.jsx"
+import OurJourney from "./components/OurJourney.jsx"
 
 class DetailErrorBoundary extends Component {
   constructor(props) { super(props); this.state = { error: null } }
@@ -63,6 +64,16 @@ const NAV = [
     icon: (active) => (
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={active ? "#C47A2C" : "#94a3b8"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d="M12 4 L14 10 L20 12 L14 14 L12 20 L10 14 L4 12 L10 10 Z"/>
+      </svg>
+    ),
+  },
+  {
+    id: "our-journey", label: "Our Journey",
+    icon: (active) => (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={active ? "#C47A2C" : "#94a3b8"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="6" cy="19" r="3"/>
+        <path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/>
+        <circle cx="18" cy="5" r="3"/>
       </svg>
     ),
   },
@@ -211,6 +222,7 @@ function MainApp() {
             {tab === "eval-rules"  && <EvaluationRules />}
             {tab === "services"    && <Services />}
             {tab === "ai-analysis" && <AIAnalysis />}
+            {tab === "our-journey" && <OurJourney />}
             {tab === "charity"     && (
               <div className="fade-in" style={{ maxWidth: 900 }}>
                 <DetailErrorBoundary>

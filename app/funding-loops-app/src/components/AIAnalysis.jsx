@@ -2,6 +2,12 @@ import React from "react"
 
 const SECTIONS = [
   {
+    id: "methodology",
+    title: "Methodology",
+    story:
+      "We scored loops for unusual circular funding behavior using an ensemble of four robust and complementary machine learning outlier-detection models. This approach can also be expanded to identify charity-level anomalies that may be missed at the loop layer.",
+  },
+  {
     id: "executive-summary",
     title: "Executive Summary",
     image: "executive_summary.webp",
@@ -90,24 +96,26 @@ export default function AIAnalysis() {
               {s.title}
             </h2>
           </div>
-          <p style={{ fontSize: 14, color: "#475569", lineHeight: 1.6, marginBottom: 16, maxWidth: 880 }}>
+          <p style={{ fontSize: 14, color: "#475569", lineHeight: 1.6, marginBottom: s.image ? 16 : 0, maxWidth: 880 }}>
             {s.story}
           </p>
-          <figure style={{
-            margin: 0,
-            background: "#ffffff",
-            border: "1px solid #e2e8f0",
-            borderRadius: 12,
-            overflow: "hidden",
-            boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
-          }}>
-            <img
-              src={`/brand/ai-analysis/${s.image}`}
-              alt={s.alt}
-              loading="lazy"
-              style={{ width: "100%", height: "auto", display: "block" }}
-            />
-          </figure>
+          {s.image && (
+            <figure style={{
+              margin: 0,
+              background: "#ffffff",
+              border: "1px solid #e2e8f0",
+              borderRadius: 12,
+              overflow: "hidden",
+              boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
+            }}>
+              <img
+                src={`/brand/ai-analysis/${s.image}`}
+                alt={s.alt}
+                loading="lazy"
+                style={{ width: "100%", height: "auto", display: "block" }}
+              />
+            </figure>
+          )}
         </section>
       ))}
 
