@@ -271,19 +271,24 @@ async function ensureRulesTable() {
 }
 
 async function loadRules() {
+  if (!db || db.MISSING) return DEFAULT_RULES;
   try {
     const { rows } = await db.query('SELECT * FROM cra.scoring_rules ORDER BY sort_order ASC, id ASC');
     rulesCache = rows;
     return rows;
   } catch (err) {
-    // Table might not exist yet — try to create it and seed defaults
-    if (err.message && err.message.includes('scoring_rules')) {
+    // Table doesn't exist — try to create it (fails silently on read-only DBs)
+    try {
       await ensureRulesTable();
       const { rows } = await db.query('SELECT * FROM cra.scoring_rules ORDER BY sort_order ASC, id ASC');
       rulesCache = rows;
       return rows;
+    } catch (e2) {
+      // Read-only DB or other failure — return in-memory defaults
+      console.warn('[Rules] DB not writable, using in-memory defaults:', e2.message);
+      rulesCache = DEFAULT_RULES;
+      return DEFAULT_RULES;
     }
-    throw err;
   }
 }
 
