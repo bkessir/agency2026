@@ -963,8 +963,8 @@ function LoopCircleDiagram({ loop, bn, onSelectCharity }) {
       <defs>
         {LOOP_PALETTE.slice(0, Math.max(n, 2)).map(c => (
           <marker key={c} id={markerId(c)}
-            markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
-            <path d="M0,0.5 L7,4 L0,7.5 Z" fill={c} />
+            markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto">
+            <path d="M0,0.5 L5,2.5 L0,4.5 Z" fill={c} />
           </marker>
         ))}
       </defs>
@@ -974,15 +974,15 @@ function LoopCircleDiagram({ loop, bn, onSelectCharity }) {
         <g key={i}>
           <path
             d={`M${e.sx.toFixed(1)},${e.sy.toFixed(1)} Q${e.ctrlX.toFixed(1)},${e.ctrlY.toFixed(1)} ${e.ex.toFixed(1)},${e.ey.toFixed(1)}`}
-            fill="none" stroke={e.color} strokeWidth="3.5" strokeLinecap="round"
+            fill="none" stroke={e.color} strokeWidth="2.5" strokeLinecap="round"
             markerEnd={`url(#${markerId(e.color)})`}
           />
           {/* Amount badge */}
-          <rect x={(e.mx - 26).toFixed(1)} y={(e.my - 12).toFixed(1)} width="52" height="22"
-            rx="11" fill={e.color} />
+          <rect x={(e.mx - 20).toFixed(1)} y={(e.my - 9).toFixed(1)} width="40" height="17"
+            rx="8" fill={e.color} opacity="0.82" />
           <text x={e.mx.toFixed(1)} y={e.my.toFixed(1)}
             textAnchor="middle" dominantBaseline="middle"
-            fontSize="8.5" fill="white" fontWeight="700" fontFamily="system-ui,sans-serif">
+            fontSize="8" fill="white" fontWeight="700" fontFamily="system-ui,sans-serif">
             {fmtBadge(bottleneck)}
           </text>
         </g>
