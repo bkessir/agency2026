@@ -7,6 +7,7 @@ import CharityDetail from "./components/CharityDetail.jsx"
 import EvaluationRules from "./components/EvaluationRules.jsx"
 import Services from "./components/Services.jsx"
 import IntroVideoModal from "./components/IntroVideoModal.jsx"
+import AIAnalysis from "./components/AIAnalysis.jsx"
 
 class DetailErrorBoundary extends Component {
   constructor(props) { super(props); this.state = { error: null } }
@@ -209,19 +210,7 @@ function MainApp() {
             {tab === "network"     && <NetworkGraph selectedBN={null} onSelectCharity={selectCharity} />}
             {tab === "eval-rules"  && <EvaluationRules />}
             {tab === "services"    && <Services />}
-            {tab === "ai-analysis" && (
-              <div className="fade-in" style={{ maxWidth: 720, margin: "60px auto", textAlign: "center", padding: "40px 24px" }}>
-                <div style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 64, height: 64, borderRadius: 16, background: "var(--accent-soft)", marginBottom: 20 }}>
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C47A2C" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M12 4 L14 10 L20 12 L14 14 L12 20 L10 14 L4 12 L10 10 Z"/>
-                  </svg>
-                </div>
-                <h2 style={{ fontSize: 24, fontWeight: 700, color: "#3B1F0F", marginBottom: 10, letterSpacing: "-0.3px" }}>AI Analysis</h2>
-                <p style={{ fontSize: 14, color: "#64748b", lineHeight: 1.6, maxWidth: 480, margin: "0 auto" }}>
-                  AI-powered insights for charity risk analysis are coming soon. This module will surface patterns, anomalies, and natural-language summaries on top of the deterministic scoring pipeline.
-                </p>
-              </div>
-            )}
+            {tab === "ai-analysis" && <AIAnalysis />}
             {tab === "charity"     && (
               <div className="fade-in" style={{ maxWidth: 900 }}>
                 <DetailErrorBoundary>
