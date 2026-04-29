@@ -16,28 +16,30 @@ function SearchPanel({ onSelectCharity }) {
   },[q])
   return (
     <div style={{maxWidth:600,margin:"80px auto",textAlign:"center"}}>
-      <div style={{fontSize:48,marginBottom:16,opacity:0.4}}>◎</div>
-      <h2 style={{fontSize:22,fontWeight:800,color:"#e2eaf5",marginBottom:8}}>Network Explorer</h2>
-      <p style={{fontSize:13,color:"#5d7fa0",marginBottom:28,lineHeight:1.7}}>
+      <div style={{fontSize:48,marginBottom:16,color:"#C47A2C",opacity:0.85}}>◎</div>
+      <h2 style={{fontSize:24,fontWeight:800,color:"#3B1F0F",marginBottom:8,letterSpacing:"-0.3px"}}>Charity Lookup</h2>
+      <p style={{fontSize:13,color:"#64748b",marginBottom:28,lineHeight:1.7}}>
         Search for a charity to explore its circular funding network. See how money flows between organizations and identify suspicious loops.
       </p>
       <input autoFocus placeholder="Search charity by name..." value={q} onChange={e=>setQ(e.target.value)}
-        style={{width:"100%",padding:"14px 18px",fontSize:15,background:"#0d1b2e",border:"1px solid #1e3a5f",borderRadius:10,color:"#cdd9e8",outline:"none",boxShadow:"0 0 20px rgba(59,130,246,0.1)"}} />
-      {busy&&<div style={{marginTop:12,color:"#4d7aa0",fontSize:13}}>Searching...</div>}
+        style={{width:"100%",padding:"14px 18px",fontSize:15,background:"#ffffff",border:"1px solid #cbd5e1",borderRadius:10,color:"#1e293b",outline:"none",boxShadow:"0 1px 3px rgba(0,0,0,0.04)",transition:"border-color 0.15s, box-shadow 0.15s"}}
+        onFocus={e=>{e.currentTarget.style.borderColor="#C47A2C";e.currentTarget.style.boxShadow="0 0 0 3px rgba(196,122,44,0.12)"}}
+        onBlur={e=>{e.currentTarget.style.borderColor="#cbd5e1";e.currentTarget.style.boxShadow="0 1px 3px rgba(0,0,0,0.04)"}} />
+      {busy&&<div style={{marginTop:12,color:"#64748b",fontSize:13}}>Searching...</div>}
       {results.length>0&&(
-        <div style={{marginTop:8,background:"#0d1b2e",border:"1px solid #1a3050",borderRadius:10,overflow:"hidden",textAlign:"left"}}>
+        <div style={{marginTop:8,background:"#ffffff",border:"1px solid #e2e8f0",borderRadius:10,overflow:"hidden",textAlign:"left",boxShadow:"0 4px 16px rgba(0,0,0,0.06)"}}>
           {results.map(r=>{
             const risk=getRiskLevel(r.score)
             return (
               <div key={r.bn} onClick={()=>onSelectCharity(r.bn,r.name)}
-                style={{padding:"12px 16px",cursor:"pointer",borderBottom:"1px solid #0d2035",transition:"background 0.12s"}}
-                onMouseEnter={e=>e.currentTarget.style.background="#112238"}
+                style={{padding:"12px 16px",cursor:"pointer",borderBottom:"1px solid #f1f5f9",transition:"background 0.12s"}}
+                onMouseEnter={e=>e.currentTarget.style.background="#faf0e6"}
                 onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
-                <div style={{fontWeight:600,fontSize:13,color:"#cdd9e8"}}>{r.name}</div>
+                <div style={{fontWeight:600,fontSize:13,color:"#3B1F0F"}}>{r.name}</div>
                 <div style={{display:"flex",gap:10,marginTop:4,alignItems:"center"}}>
                   <span style={{fontSize:10,padding:"1px 8px",borderRadius:10,background:risk.bg,color:risk.color,border:`1px solid ${risk.border}`,fontWeight:700}}>{risk.label}</span>
-                  <span style={{fontSize:11,color:"#4d7aa0"}}>{r.totalLoops} loops · {fmt$(r.maxBottleneck)} max</span>
-                  <span style={{fontSize:10,color:"#2d4d66",marginLeft:"auto"}}>{r.bn}</span>
+                  <span style={{fontSize:11,color:"#64748b"}}>{r.totalLoops} loops · {fmt$(r.maxBottleneck)} max</span>
+                  <span style={{fontSize:10,color:"#94a3b8",marginLeft:"auto"}}>{r.bn}</span>
                 </div>
               </div>
             )
@@ -132,33 +134,38 @@ export default function NetworkGraph({ selectedBN, onSelectCharity }) {
     <div className="fade-in" style={{display:"flex",flexDirection:"column",gap:16,maxWidth:1200}}>
       <div style={{display:"flex",alignItems:"center",gap:12}}>
         <div style={{flex:1}}>
-          <h2 style={{fontSize:18,fontWeight:700,color:"#e2eaf5"}}>{network?.targetName||selectedBN}</h2>
-          <div style={{fontSize:12,color:"#4d7aa0"}}>
+          <h2 style={{fontSize:18,fontWeight:700,color:"#3B1F0F",letterSpacing:"-0.2px"}}>{network?.targetName||selectedBN}</h2>
+          <div style={{fontSize:12,color:"#64748b",marginTop:2}}>
             {network?`${network.nodes.length} connected orgs · ${network.edges.length} gift flows · ${loops.length} loops`:"Loading network..."}
           </div>
         </div>
-        <button onClick={()=>onSelectCharity(null,"")} style={{padding:"8px 16px",background:"transparent",border:"1px solid #1a3050",borderRadius:8,color:"#5d7fa0",cursor:"pointer",fontSize:12}}>← Change Charity</button>
+        <button onClick={()=>onSelectCharity(null,"")}
+          style={{padding:"8px 14px",background:"#ffffff",border:"1px solid #cbd5e1",borderRadius:8,color:"#475569",cursor:"pointer",fontSize:12,fontWeight:500,transition:"all 0.12s"}}
+          onMouseEnter={e=>{e.currentTarget.style.borderColor="#C47A2C";e.currentTarget.style.color="#C47A2C"}}
+          onMouseLeave={e=>{e.currentTarget.style.borderColor="#cbd5e1";e.currentTarget.style.color="#475569"}}>
+          ← Change Charity
+        </button>
       </div>
-      <div style={{display:"flex",gap:16,fontSize:11,color:"#4d7aa0",flexWrap:"wrap"}}>
+      <div style={{display:"flex",gap:16,fontSize:11,color:"#64748b",flexWrap:"wrap"}}>
         {[["#3b82f6","Selected"],["#ef4444","Critical risk"],["#f59e0b","High / loop edges"],["#8b5cf6","Medium risk"],["#10b981","Low risk"]].map(([c,l])=>(
           <div key={l} style={{display:"flex",alignItems:"center",gap:5}}><div style={{width:10,height:10,borderRadius:"50%",background:c}}/><span>{l}</span></div>
         ))}
       </div>
-      <div style={{background:"#070f1c",border:"1px solid #1a3050",borderRadius:12,position:"relative",height:560,overflow:"hidden"}}>
-        {netLoading?(<div style={{display:"flex",alignItems:"center",justifyContent:"center",height:"100%",color:"#4d7aa0"}}>Loading network graph...</div>):(
+      <div style={{background:"#070f1c",borderRadius:12,position:"relative",height:560,overflow:"hidden",boxShadow:"0 4px 20px rgba(15,23,42,0.15)"}}>
+        {netLoading?(<div style={{display:"flex",alignItems:"center",justifyContent:"center",height:"100%",color:"#94a3b8"}}>Loading network graph...</div>):(
           <><svg ref={svgRef} style={{width:"100%",height:"100%"}}/><div ref={tooltipRef} className="graph-tooltip" style={{display:"none"}}/></>
         )}
       </div>
       {loops.length>0&&(
-        <div style={{background:"#0d1b2e",border:"1px solid #1a3050",borderRadius:12,padding:16}}>
-          <div style={{fontSize:14,fontWeight:700,color:"#cdd9e8",marginBottom:12}}>Detected Loops ({loops.length})</div>
+        <div style={{background:"#ffffff",border:"1px solid #e2e8f0",borderRadius:12,padding:16,boxShadow:"0 1px 4px rgba(0,0,0,0.04)"}}>
+          <div style={{fontSize:14,fontWeight:700,color:"#3B1F0F",marginBottom:12}}>Detected Loops ({loops.length})</div>
           <div style={{display:"flex",flexDirection:"column",gap:6}}>
             {loops.slice(0,12).map(loop=>(
-              <div key={loop.id} style={{display:"flex",alignItems:"center",gap:12,padding:"10px 14px",background:"#071220",borderRadius:8,border:"1px solid #0d2035"}}>
-                <div style={{padding:"2px 8px",borderRadius:10,background:loop.hops===2?"rgba(239,68,68,0.15)":"rgba(245,158,11,0.15)",color:loop.hops===2?"#ef4444":"#f59e0b",fontSize:10,fontWeight:700,flexShrink:0,border:`1px solid ${loop.hops===2?"rgba(239,68,68,0.3)":"rgba(245,158,11,0.3)"}`}}>{loop.hops}-hop</div>
-                <div style={{flex:1,fontSize:12,color:"#cdd9e8",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{(loop.pathNames||loop.pathBNs||[]).join(" → ")}</div>
-                <div style={{fontSize:11,color:"#fbbf24",flexShrink:0}}>{fmt$(loop.bottleneck)}</div>
-                <div style={{fontSize:10,color:"#3d607a",flexShrink:0}}>{loop.minYear}–{loop.maxYear}</div>
+              <div key={loop.id} style={{display:"flex",alignItems:"center",gap:12,padding:"10px 14px",background:"#f8fafc",borderRadius:8,border:"1px solid #e2e8f0"}}>
+                <div style={{padding:"2px 8px",borderRadius:10,background:loop.hops===2?"rgba(239,68,68,0.10)":"rgba(245,158,11,0.10)",color:loop.hops===2?"#dc2626":"#d97706",fontSize:10,fontWeight:700,flexShrink:0,border:`1px solid ${loop.hops===2?"rgba(239,68,68,0.3)":"rgba(245,158,11,0.3)"}`}}>{loop.hops}-hop</div>
+                <div style={{flex:1,fontSize:12,color:"#475569",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{(loop.pathNames||loop.pathBNs||[]).join(" → ")}</div>
+                <div style={{fontSize:11,color:"#C47A2C",fontWeight:600,flexShrink:0}}>{fmt$(loop.bottleneck)}</div>
+                <div style={{fontSize:10,color:"#94a3b8",flexShrink:0}}>{loop.minYear}–{loop.maxYear}</div>
               </div>
             ))}
           </div>
