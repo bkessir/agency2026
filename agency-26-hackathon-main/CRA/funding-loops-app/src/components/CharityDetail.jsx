@@ -905,7 +905,7 @@ function LoopCircleDiagram({ loop, bn, onSelectCharity }) {
   const cx = W / 2, cy = H / 2 + (n === 2 ? 0 : 5)
   const R      = n === 2 ? 72 : n === 3 ? 88 : n <= 5 ? 84 : 78
   const nodeR  = n <= 3 ? 32 : n <= 5 ? 27 : 22
-  const CURVE  = n === 2 ? 70 : 32
+  const CURVE  = n === 2 ? 70 : n === 3 ? 52 : n <= 5 ? 42 : 36
   const bottleneck = loop.bottleneck || 0
 
   const nodes = pathBNs.map((nodeBn, i) => {
@@ -926,8 +926,9 @@ function LoopCircleDiagram({ loop, bn, onSelectCharity }) {
 
     let ctrlX, ctrlY
     if (n === 2) {
-      const perpX = -(next.y - node.y), perpY = next.x - node.x
-      const p = normVec(perpX, perpY)
+      // Always use the same perpendicular from node[0]→node[1]; flip sign per edge
+      const basePerpX = -(nodes[1].y - nodes[0].y), basePerpY = nodes[1].x - nodes[0].x
+      const p = normVec(basePerpX, basePerpY)
       const sign = i === 0 ? 1 : -1
       ctrlX = (node.x + next.x) / 2 + p.x * CURVE * sign
       ctrlY = (node.y + next.y) / 2 + p.y * CURVE * sign
@@ -947,9 +948,11 @@ function LoopCircleDiagram({ loop, bn, onSelectCharity }) {
     const ex = next.x + ed.x * (nodeR + 10)
     const ey = next.y + ed.y * (nodeR + 10)
 
-    const t = 0.5
-    const mx = (1-t)*(1-t)*sx + 2*(1-t)*t*ctrlX + t*t*ex
-    const my = (1-t)*(1-t)*sy + 2*(1-t)*t*ctrlY + t*t*ey
+    // Place badge outside the arc: control point + extra outward push for n≥3
+    const badgeExtra = n === 2 ? 0 : 16
+    const bd = normVec(ctrlX - cx, ctrlY - cy)
+    const mx = ctrlX + bd.x * badgeExtra
+    const my = ctrlY + bd.y * badgeExtra
 
     return { sx, sy, ctrlX, ctrlY, ex, ey, color, mx, my }
   })
@@ -962,8 +965,8 @@ function LoopCircleDiagram({ loop, bn, onSelectCharity }) {
       <defs>
         {LOOP_PALETTE.slice(0, Math.max(n, 2)).map(c => (
           <marker key={c} id={markerId(c)}
-            markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
-            <path d="M0,0.5 L7,4 L0,7.5 Z" fill={c} />
+            markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto">
+            <path d="M0,0.5 L5,2.5 L0,4.5 Z" fill={c} />
           </marker>
         ))}
       </defs>
@@ -973,15 +976,15 @@ function LoopCircleDiagram({ loop, bn, onSelectCharity }) {
         <g key={i}>
           <path
             d={`M${e.sx.toFixed(1)},${e.sy.toFixed(1)} Q${e.ctrlX.toFixed(1)},${e.ctrlY.toFixed(1)} ${e.ex.toFixed(1)},${e.ey.toFixed(1)}`}
-            fill="none" stroke={e.color} strokeWidth="3.5" strokeLinecap="round"
+            fill="none" stroke={e.color} strokeWidth="2.5" strokeLinecap="round"
             markerEnd={`url(#${markerId(e.color)})`}
           />
           {/* Amount badge */}
-          <rect x={(e.mx - 26).toFixed(1)} y={(e.my - 12).toFixed(1)} width="52" height="22"
-            rx="11" fill={e.color} />
+          <rect x={(e.mx - 20).toFixed(1)} y={(e.my - 9).toFixed(1)} width="40" height="17"
+            rx="8" fill={e.color} opacity="0.82" />
           <text x={e.mx.toFixed(1)} y={e.my.toFixed(1)}
             textAnchor="middle" dominantBaseline="middle"
-            fontSize="8.5" fill="white" fontWeight="700" fontFamily="system-ui,sans-serif">
+            fontSize="8" fill="white" fontWeight="700" fontFamily="system-ui,sans-serif">
             {fmtBadge(bottleneck)}
           </text>
         </g>
