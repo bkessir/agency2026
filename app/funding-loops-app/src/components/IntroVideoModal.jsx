@@ -65,7 +65,7 @@ export default function IntroVideoModal({ open, onClose }) {
         {/* 16:9 responsive video container */}
         <div style={{ position: "relative", paddingBottom: "56.25%", height: 0 }}>
           <iframe
-            src="https://player.cloudinary.com/embed/?cloud_name=drgja8tls&public_id=Pronghorn_Intro_z9jynd"
+            src="https://player.cloudinary.com/embed/?cloud_name=drgja8tls&public_id=Intro_Video_e0d5qa&player[posterOptions][transformation][crop]=fit&player[posterOptions][transformation][background]=black"
             title="AIM Pronghorn 404 — Intro"
             allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
             allowFullScreen
