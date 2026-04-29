@@ -926,8 +926,9 @@ function LoopCircleDiagram({ loop, bn, onSelectCharity }) {
 
     let ctrlX, ctrlY
     if (n === 2) {
-      const perpX = -(next.y - node.y), perpY = next.x - node.x
-      const p = normVec(perpX, perpY)
+      // Always use the same perpendicular from node[0]→node[1]; flip sign per edge
+      const basePerpX = -(nodes[1].y - nodes[0].y), basePerpY = nodes[1].x - nodes[0].x
+      const p = normVec(basePerpX, basePerpY)
       const sign = i === 0 ? 1 : -1
       ctrlX = (node.x + next.x) / 2 + p.x * CURVE * sign
       ctrlY = (node.y + next.y) / 2 + p.y * CURVE * sign
