@@ -1,7 +1,7 @@
 {
-  "name": "charity-risk-intelligence",
+  "name": "aim-pronghorn-404-agency-2026",
   "version": "1.0.0",
-  "description": "CRA T3010 circular gifting visualization — web server + React frontend",
+  "description": "AIM Pronghorn 404 — Agency 2026 hackathon app (CRA T3010 circular-gifting visualization)",
   "main": "visualizations/server.js",
   "scripts": {
     "start": "node visualizations/server.js",
