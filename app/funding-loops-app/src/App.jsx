@@ -43,10 +43,11 @@ const NAV = [
     children: [
       { id: "top10", label: "Top 10 Risks" },
       { id: "leaderboard", label: "Risk Leaderboard" },
+      { id: "eval-rules", label: "Evaluation Rules" },
     ],
   },
   {
-    id: "network", label: "Network Explorer",
+    id: "network", label: "Charity Lookup",
     icon: (active) => (
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={active ? "#C47A2C" : "#94a3b8"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
@@ -56,20 +57,10 @@ const NAV = [
     ),
   },
   {
-    id: "eval-rules", label: "Evaluation Layer",
+    id: "ai-analysis", label: "AI Analysis",
     icon: (active) => (
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={active ? "#C47A2C" : "#94a3b8"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
-      </svg>
-    ),
-  },
-  {
-    id: "services", label: "Services",
-    icon: (active) => (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={active ? "#C47A2C" : "#94a3b8"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="3"/>
-        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/>
-        <path d="M15.54 8.46a5 5 0 0 1 0 7.07M8.46 8.46a5 5 0 0 0 0 7.07"/>
+        <path d="M12 4 L14 10 L20 12 L14 14 L12 20 L10 14 L4 12 L10 10 Z"/>
       </svg>
     ),
   },
@@ -78,7 +69,7 @@ const NAV = [
 function Sidebar({ tab, setTab }) {
   // keep Risk Analysis expanded when any child is active
   const [expanded, setExpanded] = React.useState(() =>
-    ["leaderboard", "top10"].includes(tab) ? { "risk-analysis": true } : {}
+    ["leaderboard", "top10", "eval-rules"].includes(tab) ? { "risk-analysis": true } : {}
   )
 
   const toggle = (id) => setExpanded(prev => ({ ...prev, [id]: !prev[id] }))
@@ -214,6 +205,19 @@ function MainApp() {
             {tab === "network"     && <NetworkGraph selectedBN={null} onSelectCharity={selectCharity} />}
             {tab === "eval-rules"  && <EvaluationRules />}
             {tab === "services"    && <Services />}
+            {tab === "ai-analysis" && (
+              <div className="fade-in" style={{ maxWidth: 720, margin: "60px auto", textAlign: "center", padding: "40px 24px" }}>
+                <div style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 64, height: 64, borderRadius: 16, background: "var(--accent-soft)", marginBottom: 20 }}>
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C47A2C" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 4 L14 10 L20 12 L14 14 L12 20 L10 14 L4 12 L10 10 Z"/>
+                  </svg>
+                </div>
+                <h2 style={{ fontSize: 24, fontWeight: 700, color: "#3B1F0F", marginBottom: 10, letterSpacing: "-0.3px" }}>AI Analysis</h2>
+                <p style={{ fontSize: 14, color: "#64748b", lineHeight: 1.6, maxWidth: 480, margin: "0 auto" }}>
+                  AI-powered insights for charity risk analysis are coming soon. This module will surface patterns, anomalies, and natural-language summaries on top of the deterministic scoring pipeline.
+                </p>
+              </div>
+            )}
             {tab === "charity"     && (
               <div className="fade-in" style={{ maxWidth: 900 }}>
                 <DetailErrorBoundary>
