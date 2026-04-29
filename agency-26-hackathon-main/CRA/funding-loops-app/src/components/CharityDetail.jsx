@@ -709,7 +709,7 @@ function ScoreDerivation({ derivation, appScore }) {
         <div style={{ padding: '0 14px 14px', borderTop: '1px solid #e2e8f0' }}>
           {/* Formula explanation */}
           <div style={{ fontSize: 12, color: '#64748b', marginTop: 12, marginBottom: 14, lineHeight: 1.6 }}>
-            Each loop gets a <strong>suspicion score 0–10</strong> from matching evaluation rules.
+            Each loop gets a <strong>suspicion score 0–10</strong> from matching evaluation layer rules.
             Loop scores are averaged weighted by <code style={{ background: '#f1f5f9', padding: '1px 5px', borderRadius: 3 }}>log(bottleneck + 1)</code>,
             then multiplied by {multiplier} to produce the charity score (0–30).
           </div>
@@ -866,6 +866,170 @@ function LoopClose({ firstBn, firstName, bn, onSelectCharity }) {
   )
 }
 
+// ─── Circular Loop Diagram ───────────────────────────────────────────────────
+
+const LOOP_PALETTE = ['#3b82f6', '#22c55e', '#a855f7', '#f59e0b', '#ef4444', '#06b6d4', '#ec4899', '#14b8a6']
+
+function normVec(dx, dy) {
+  const len = Math.sqrt(dx * dx + dy * dy) || 1
+  return { x: dx / len, y: dy / len }
+}
+
+function splitLabel(name, max = 12) {
+  const words = (name || '').split(/\s+/)
+  const lines = []
+  let cur = ''
+  for (const w of words) {
+    if (!cur) { cur = w; continue }
+    if ((cur + ' ' + w).length <= max) cur += ' ' + w
+    else { lines.push(cur); cur = w }
+  }
+  if (cur) lines.push(cur)
+  return lines.slice(0, 3)
+}
+
+function fmtBadge(v) {
+  if (!v) return '$0'
+  if (v >= 1e6) return `$${(v / 1e6).toFixed(1)}M`
+  if (v >= 1e3) return `$${Math.round(v / 1000)}K`
+  return `$${v}`
+}
+
+function LoopCircleDiagram({ loop, bn, onSelectCharity }) {
+  const pathBNs   = loop.pathBNs   || []
+  const pathNames = loop.pathNames || []
+  const n = pathBNs.length
+  if (n < 2 || n > 7) return null
+
+  const W = 300, H = 270
+  const cx = W / 2, cy = H / 2 + (n === 2 ? 0 : 5)
+  const R      = n === 2 ? 72 : n === 3 ? 88 : n <= 5 ? 84 : 78
+  const nodeR  = n <= 3 ? 32 : n <= 5 ? 27 : 22
+  const CURVE  = n === 2 ? 70 : 32
+  const bottleneck = loop.bottleneck || 0
+
+  const nodes = pathBNs.map((nodeBn, i) => {
+    const angle = (2 * Math.PI * i / n) - Math.PI / 2
+    return {
+      bn: nodeBn,
+      name: pathNames[i] || nodeBn,
+      x: cx + R * Math.cos(angle),
+      y: cy + R * Math.sin(angle),
+      isSelf: nodeBn === bn,
+      color: LOOP_PALETTE[i % LOOP_PALETTE.length],
+    }
+  })
+
+  const edges = nodes.map((node, i) => {
+    const next  = nodes[(i + 1) % n]
+    const color = LOOP_PALETTE[i % LOOP_PALETTE.length]
+
+    let ctrlX, ctrlY
+    if (n === 2) {
+      const perpX = -(next.y - node.y), perpY = next.x - node.x
+      const p = normVec(perpX, perpY)
+      const sign = i === 0 ? 1 : -1
+      ctrlX = (node.x + next.x) / 2 + p.x * CURVE * sign
+      ctrlY = (node.y + next.y) / 2 + p.y * CURVE * sign
+    } else {
+      const midX = (node.x + next.x) / 2
+      const midY = (node.y + next.y) / 2
+      const d = normVec(midX - cx, midY - cy)
+      ctrlX = midX + d.x * CURVE
+      ctrlY = midY + d.y * CURVE
+    }
+
+    const sd = normVec(ctrlX - node.x, ctrlY - node.y)
+    const sx = node.x + sd.x * (nodeR + 2)
+    const sy = node.y + sd.y * (nodeR + 2)
+
+    const ed = normVec(ctrlX - next.x, ctrlY - next.y)
+    const ex = next.x + ed.x * (nodeR + 10)
+    const ey = next.y + ed.y * (nodeR + 10)
+
+    const t = 0.5
+    const mx = (1-t)*(1-t)*sx + 2*(1-t)*t*ctrlX + t*t*ex
+    const my = (1-t)*(1-t)*sy + 2*(1-t)*t*ctrlY + t*t*ey
+
+    return { sx, sy, ctrlX, ctrlY, ex, ey, color, mx, my }
+  })
+
+  const markerId = (c) => `lp-arr-${c.replace('#', '')}`
+
+  return (
+    <svg width="100%" viewBox={`0 0 ${W} ${H}`}
+      style={{ display: 'block', margin: '8px auto 4px', maxWidth: 300 }}>
+      <defs>
+        {LOOP_PALETTE.slice(0, Math.max(n, 2)).map(c => (
+          <marker key={c} id={markerId(c)}
+            markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+            <path d="M0,0.5 L7,4 L0,7.5 Z" fill={c} />
+          </marker>
+        ))}
+      </defs>
+
+      {/* Arrows */}
+      {edges.map((e, i) => (
+        <g key={i}>
+          <path
+            d={`M${e.sx.toFixed(1)},${e.sy.toFixed(1)} Q${e.ctrlX.toFixed(1)},${e.ctrlY.toFixed(1)} ${e.ex.toFixed(1)},${e.ey.toFixed(1)}`}
+            fill="none" stroke={e.color} strokeWidth="3.5" strokeLinecap="round"
+            markerEnd={`url(#${markerId(e.color)})`}
+          />
+          {/* Amount badge */}
+          <rect x={(e.mx - 26).toFixed(1)} y={(e.my - 12).toFixed(1)} width="52" height="22"
+            rx="11" fill={e.color} />
+          <text x={e.mx.toFixed(1)} y={e.my.toFixed(1)}
+            textAnchor="middle" dominantBaseline="middle"
+            fontSize="8.5" fill="white" fontWeight="700" fontFamily="system-ui,sans-serif">
+            {fmtBadge(bottleneck)}
+          </text>
+        </g>
+      ))}
+
+      {/* Nodes */}
+      {nodes.map((nd) => {
+        const lines = splitLabel(nd.name, 11)
+        const lineH = 9
+        const totalH = lines.length * lineH
+        const startY = nd.y - totalH / 2 + lineH / 2
+        return (
+          <g key={nd.bn}
+            onClick={() => !nd.isSelf && onSelectCharity?.(nd.bn)}
+            style={{ cursor: nd.isSelf ? 'default' : 'pointer' }}>
+            {/* Drop shadow */}
+            <circle cx={nd.x + 1} cy={nd.y + 2} r={nodeR + 1} fill="rgba(0,0,0,0.12)" />
+            <circle cx={nd.x} cy={nd.y} r={nodeR} fill={nd.color} stroke="white" strokeWidth="2.5" />
+            {/* Inner ring (decorative) */}
+            <circle cx={nd.x} cy={nd.y} r={nodeR - 7} fill="none"
+              stroke="rgba(255,255,255,0.35)" strokeWidth="1.5" />
+            {/* Heart symbol */}
+            <text x={nd.x} y={startY - lineH * 0.9}
+              textAnchor="middle" dominantBaseline="middle"
+              fontSize="9" fill="rgba(255,255,255,0.7)" fontFamily="system-ui,sans-serif">♥</text>
+            {/* Charity name */}
+            {lines.map((line, li) => (
+              <text key={li}
+                x={nd.x} y={(startY + li * lineH).toFixed(1)}
+                textAnchor="middle" dominantBaseline="middle"
+                fontSize={lines.length > 2 ? '7' : '7.5'}
+                fill="white" fontWeight="700" fontFamily="system-ui,sans-serif">
+                {line}
+              </text>
+            ))}
+            {/* "Charity" subtext */}
+            <text x={nd.x} y={(nd.y + nodeR - 8).toFixed(1)}
+              textAnchor="middle" dominantBaseline="middle"
+              fontSize="6" fill="rgba(255,255,255,0.65)" fontFamily="system-ui,sans-serif">
+              Charity
+            </text>
+          </g>
+        )
+      })}
+    </svg>
+  )
+}
+
 // ─── Hop Group (collapsible) ─────────────────────────────────────────────────
 
 function HopGroup({ hops, loops, bn, onSelectCharity, charity, defaultOpen = false }) {
@@ -915,6 +1079,11 @@ function HopGroup({ hops, loops, bn, onSelectCharity, charity, defaultOpen = fal
                     {loop.minYear && <span>{loop.minYear}–{loop.maxYear}</span>}
                   </div>
                 </div>
+
+                {/* Circular flow diagram */}
+                {(loop.pathBNs || []).length >= 2 && (loop.pathBNs || []).length <= 7 && (
+                  <LoopCircleDiagram loop={loop} bn={bn} onSelectCharity={onSelectCharity} />
+                )}
 
                 {/* Loop path chips */}
                 <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 4, marginTop: 4, marginBottom: 4 }}>
