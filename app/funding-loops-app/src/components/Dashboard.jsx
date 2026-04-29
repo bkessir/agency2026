@@ -25,46 +25,11 @@ const CustomTooltip = ({ active, payload, label }) => {
   )
 }
 
-const ICONS = {
-  loops: (color) => (
-    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/>
-      <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
-    </svg>
-  ),
-  charities: (color) => (
-    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <line x1="3" y1="22" x2="21" y2="22"/><line x1="6" y1="18" x2="6" y2="11"/>
-      <line x1="10" y1="18" x2="10" y2="11"/><line x1="14" y1="18" x2="14" y2="11"/>
-      <line x1="18" y1="18" x2="18" y2="11"/>
-      <polygon points="12 2 20 7 4 7"/>
-    </svg>
-  ),
-  critical: (color) => (
-    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
-      <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
-    </svg>
-  ),
-  circular: (color) => (
-    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-    </svg>
-  ),
-}
-
-const ICON_COLORS = {
-  loops:     { bg: "#e0e7ff", stroke: "#4f46e5" },
-  charities: { bg: "#dcfce7", stroke: "#16a34a" },
-  critical:  { bg: "#fee2e2", stroke: "#dc2626" },
-  circular:  { bg: "#fef3c7", stroke: "#d97706" },
-}
-
 const STAT_CONFIG = [
   {
     key: "charities",
     label: "Charities Involved",
-    iconKey: "charities",
+    image: "kpi1.webp",
     filter: "all",
     getSub: () => "Unique organizations",
     getValue: (stats) => fmtN(stats?.universeSize),
@@ -72,7 +37,7 @@ const STAT_CONFIG = [
   {
     key: "critical",
     label: "Critical Risk Entities",
-    iconKey: "critical",
+    image: "kpi2.webp",
     filter: "critical",
     getSub: (derived) => `${derived.high || 0} high-risk`,
     getValue: (_, derived) => fmtN(derived.critical),
@@ -80,7 +45,7 @@ const STAT_CONFIG = [
   {
     key: "loops",
     label: "Total Detected Loops",
-    iconKey: "loops",
+    image: "kpi3.webp",
     filter: "all",
     getSub: () => "Circular funding cycles",
     getValue: (stats) => fmtN(stats?.totalLoops),
@@ -88,7 +53,7 @@ const STAT_CONFIG = [
   {
     key: "circular",
     label: "Total Circular $",
-    iconKey: "circular",
+    image: "kpi4.webp",
     filter: "all",
     getSub: () => "In detected loops",
     getValue: (_, derived) => fmt$(derived.totalCircular),
@@ -121,47 +86,61 @@ export default function Dashboard({ onSelectCharity, onOpenLeaderboard }) {
         <div style={{ fontSize:11, color:"#64748b", marginTop:3, lineHeight:1 }}>Detecting suspicious money loops between Canadian registered charities</div>
       </div>
 
-      {/* 4 clickable stat boxes */}
-      <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:16, marginBottom:24 }}>
-        {loading
-          ? [1,2,3,4].map(i => <div key={i} style={S.card}><Skeleton h={80} /></div>)
-          : STAT_CONFIG.map(cfg => (
-            <button key={cfg.key}
-              onClick={() => onOpenLeaderboard(cfg.filter)}
-              style={{
-                ...S.card,
-                cursor: "pointer",
-                textAlign: "left",
-                display: "flex",
-                flexDirection: "column",
-                gap: 6,
-                transition: "transform 0.12s, box-shadow 0.12s",
-                width: "100%",
-              }}
-              onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 4px 16px rgba(0,0,0,0.10)" }}
-              onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 1px 4px rgba(0,0,0,0.06)" }}
-            >
-              {/* Title */}
-              <div style={{ fontSize:12, fontWeight:700, color:"#1e293b" }}>{cfg.label}</div>
-              {/* Icon + stacked number/subtitle */}
-              <div style={{ display:"flex", alignItems:"center", gap:12 }}>
-                <div style={{
-                  width:38, height:38, borderRadius:"50%",
-                  background: ICON_COLORS[cfg.iconKey].bg,
-                  display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0,
-                }}>
-                  {ICONS[cfg.iconKey](ICON_COLORS[cfg.iconKey].stroke)}
+      {/* 4 stylized clickable KPI tiles on a misty mountain background */}
+      <div style={{
+        backgroundImage: "url('/brand/kpis/background.webp')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        borderRadius: 18,
+        padding: 22,
+        marginBottom: 24,
+        boxShadow: "0 4px 20px rgba(0,0,0,0.10)",
+      }}>
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:16 }}>
+          {loading
+            ? [1,2,3,4].map(i => (
+                <div key={i} style={{ aspectRatio: "5 / 4", borderRadius: 14, background: "rgba(255,255,255,0.85)", boxShadow: "0 2px 10px rgba(0,0,0,0.10)" }}>
+                  <div style={{ padding: 18 }}><Skeleton h={20} /></div>
                 </div>
-                <div>
-                  <div style={{ fontSize:26, fontWeight:500, color:"#475569", letterSpacing:"-0.5px", lineHeight:1.1 }}>
+              ))
+            : STAT_CONFIG.map(cfg => (
+              <button key={cfg.key}
+                onClick={() => onOpenLeaderboard(cfg.filter)}
+                style={{
+                  border: "none",
+                  cursor: "pointer",
+                  padding: 0,
+                  borderRadius: 14,
+                  overflow: "hidden",
+                  backgroundImage: `url('/brand/kpis/${cfg.image}')`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                  aspectRatio: "5 / 4",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-end",
+                  textAlign: "right",
+                  transition: "transform 0.18s, box-shadow 0.18s",
+                  boxShadow: "0 2px 10px rgba(0,0,0,0.12)",
+                }}
+                onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-3px)"; e.currentTarget.style.boxShadow = "0 8px 24px rgba(0,0,0,0.18)" }}
+                onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 2px 10px rgba(0,0,0,0.12)" }}
+              >
+                <div style={{ padding: "16px 18px", maxWidth: "75%" }}>
+                  <div style={{ fontSize: 10, fontWeight: 700, color: "#3B1F0F", textTransform: "uppercase", letterSpacing: "0.6px", opacity: 0.75 }}>
+                    {cfg.label}
+                  </div>
+                  <div style={{ fontSize: 28, fontWeight: 700, color: "#3B1F0F", lineHeight: 1.05, marginTop: 4, letterSpacing: "-0.4px" }}>
                     {cfg.getValue(stats, derived)}
                   </div>
-                  <div style={{ fontSize:11, color:"#94a3b8", marginTop:1 }}>{cfg.getSub(derived)}</div>
+                  <div style={{ fontSize: 10, color: "#3B1F0F", marginTop: 3, opacity: 0.6 }}>
+                    {cfg.getSub(derived)}
+                  </div>
                 </div>
-              </div>
-            </button>
-          ))
-        }
+              </button>
+            ))
+          }
+        </div>
       </div>
 
       {/* Geographic map */}
