@@ -1,8 +1,8 @@
 {
-  "name": "ai-for-accountability-part-1",
+  "name": "aim-pronghorn-404-agency-2026",
   "version": "1.0.0",
-  "description": "AI For Accountability Hackathon - CRA T3010 Charity Data Pipeline (5-Year, 2020-2024)",
-  "main": "scripts/01-migrate.js",
+  "description": "AIM Pronghorn 404 — Agency 2026 hackathon app (CRA T3010 circular-gifting visualization)",
+  "main": "visualizations/server.js",
   "scripts": {
     "migrate": "node scripts/01-migrate.js",
     "seed": "node scripts/02-seed-codes.js",

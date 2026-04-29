@@ -1,22 +1,28 @@
 @import "tailwindcss";
 
 :root {
-  --bg-base:  #f0f4f8;
-  --bg-card:  #ffffff;
-  --bg-card2: #f8fafc;
-  --bg-hover: #f1f5f9;
-  --border:   #e2e8f0;
-  --border2:  #cbd5e1;
-  --text:     #1e293b;
-  --muted:    #64748b;
-  --label:    #94a3b8;
-  --heading:  #0f172a;
-  --accent:   #3b82f6;
-  --red:      #ef4444;
-  --amber:    #f59e0b;
-  --green:    #10b981;
-  --purple:   #8b5cf6;
-  --gold:     #fbbf24;
+  /* AIM Pronghorn 404 — Visual Identity */
+  --bg-base:    #F5F5F5;        /* Soft White (brand) */
+  --bg-card:    #ffffff;
+  --bg-card2:   #faf6f0;        /* Subtle warm off-white */
+  --bg-hover:   #f1f5f9;
+  --border:     #e2e8f0;
+  --border2:    #cbd5e1;
+  --text:       #1e293b;
+  --muted:      #64748b;
+  --label:      #94a3b8;
+  --heading:    #3B1F0F;        /* Deep Brown (brand) */
+  --accent:     #C47A2C;        /* Burnt Orange — primary brand */
+  --accent-soft:#faf0e6;        /* Soft tint for active backgrounds */
+  --brand-dark: #3B1F0F;
+  --brand-beige:#E8D8C3;        /* Warm Beige */
+  --accent-cyan:  #00E0FF;       /* Tech accent */
+  --accent-purple:#8B5CF6;       /* Tech accent */
+  --red:        #ef4444;
+  --amber:      #f59e0b;
+  --green:      #10b981;
+  --purple:     #8B5CF6;
+  --gold:       #fbbf24;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -58,5 +64,5 @@ body {
   color: var(--text);
 }
 
-.table-row:hover { background: #f0f7ff; cursor: pointer; }
-.table-row.selected { background: #eff6ff !important; border-left: 3px solid var(--accent); }
+.table-row:hover { background: #fdf6ec; cursor: pointer; }
+.table-row.selected { background: var(--accent-soft) !important; border-left: 3px solid var(--accent); }
