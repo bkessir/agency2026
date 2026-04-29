@@ -167,6 +167,7 @@ export default function EvaluationRules() {
   const [rules, setRules] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [debugInfo, setDebugInfo] = useState(null)
   const [editingId, setEditingId] = useState(null)
   const [showAddForm, setShowAddForm] = useState(false)
   const [saving, setSaving] = useState(false)
@@ -177,14 +178,21 @@ export default function EvaluationRules() {
   const fetchRules = useCallback(async () => {
     try {
       setLoading(true)
-      const r = await fetch(`${API}/api/rules`)
-      const data = await r.json()
+      const apiUrl = `${API}/api/rules`
+      setDebugInfo(`Fetching: ${apiUrl}`)
+      const r = await fetch(apiUrl)
+      const text = await r.text()
+      setDebugInfo(`Status: ${r.status} | Response: ${text.slice(0, 200)}`)
+      let data
+      try { data = JSON.parse(text) } catch(e) { throw new Error(`Non-JSON response (${r.status}): ${text.slice(0, 100)}`) }
       if (!r.ok) throw new Error(data?.error || `Server error ${r.status}`)
-      if (!Array.isArray(data)) throw new Error('Invalid response from server')
+      if (!Array.isArray(data)) throw new Error(`Expected array, got: ${typeof data} — ${text.slice(0, 100)}`)
       setRules(data)
       setError(null)
+      setDebugInfo(`Loaded ${data.length} rules OK`)
     } catch (e) {
       setError(`Could not load rules — ${e.message}`)
+      setDebugInfo(`Exception: ${e.message}`)
     } finally {
       setLoading(false)
     }
@@ -287,7 +295,8 @@ export default function EvaluationRules() {
         </div>
       )}
 
-      {error && <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: 8, padding: '12px 16px', color: '#dc2626', fontSize: 13, marginBottom: 16 }}>{error}</div>}
+      {error && <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: 8, padding: '12px 16px', color: '#dc2626', fontSize: 13, marginBottom: 8 }}>{error}</div>}
+      {debugInfo && <div style={{ background: '#f8fafc', border: '1px solid #cbd5e1', borderRadius: 8, padding: '10px 14px', color: '#475569', fontSize: 11, fontFamily: 'monospace', marginBottom: 16, wordBreak: 'break-all' }}>🔍 Debug: {debugInfo}</div>}
 
       {loading ? (
         <div style={{ color: '#94a3b8', textAlign: 'center', padding: 40 }}>Loading rules...</div>
