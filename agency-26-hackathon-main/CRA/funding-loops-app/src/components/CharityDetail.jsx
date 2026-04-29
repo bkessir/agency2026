@@ -1088,38 +1088,11 @@ function HopGroup({ hops, loops, bn, onSelectCharity, charity, defaultOpen = fal
                   <LoopCircleDiagram loop={loop} bn={bn} onSelectCharity={onSelectCharity} />
                 )}
 
-                {/* Loop path chips */}
-                <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 4, marginTop: 4, marginBottom: 4 }}>
-                  {(loop.pathBNs || []).map((pathBn, idx) => {
-                    const pathName  = (loop.pathNames || [])[idx] || pathBn
-                    const truncated = pathName.length > 28 ? pathName.slice(0, 27) + '…' : pathName
-                    const isSelf    = pathBn === bn
-                    return (
-                      <React.Fragment key={idx}>
-                        {idx > 0 && <span style={{ color: '#94a3b8', fontSize: 11, flexShrink: 0 }}>→</span>}
-                        <button
-                          title={pathName}
-                          onClick={() => !isSelf && onSelectCharity && onSelectCharity(pathBn)}
-                          style={{
-                            fontSize: 11, fontWeight: isSelf ? 700 : 500,
-                            color: isSelf ? '#1e293b' : '#2563eb',
-                            background: isSelf ? '#f1f5f9' : 'transparent',
-                            border: isSelf ? '1px solid #e2e8f0' : 'none',
-                            borderRadius: 4, padding: '2px 6px',
-                            cursor: isSelf ? 'default' : 'pointer',
-                            textDecoration: (!isSelf && onSelectCharity) ? 'underline' : 'none',
-                            textDecorationColor: '#bfdbfe', textUnderlineOffset: 2,
-                          }}
-                        >{truncated}</button>
-                      </React.Fragment>
-                    )
-                  })}
-                  {/* Close the loop */}
-                {loop.pathBNs?.length > 0 && <LoopClose firstBn={loop.pathBNs[0]} firstName={(loop.pathNames || [])[0] || loop.pathBNs[0]} bn={bn} onSelectCharity={onSelectCharity} />}
-              </div>
-
-                <LoopTimeline activeYears={loop.activeYears || []} fpeByYear={loop.fpeByYear || {}} />
-                <RuleBreakdown loop={loop} />
+                {/* Timeline + Rule breakdown on same line */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', marginTop: 4 }}>
+                  <LoopTimeline activeYears={loop.activeYears || []} fpeByYear={loop.fpeByYear || {}} />
+                  <RuleBreakdown loop={loop} />
+                </div>
               </div>
             )
           })}
