@@ -59,7 +59,7 @@ const NAV = [
     ),
   },
   {
-    id: "ai-analysis", label: "AI Analysis",
+    id: "ai-analysis", label: "Machine Learning Analysis",
     icon: (active) => (
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={active ? "#C47A2C" : "#94a3b8"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d="M12 4 L14 10 L20 12 L14 14 L12 20 L10 14 L4 12 L10 10 Z"/>

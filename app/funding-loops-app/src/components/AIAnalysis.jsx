@@ -69,7 +69,7 @@ export default function AIAnalysis() {
             <path d="M12 4 L14 10 L20 12 L14 14 L12 20 L10 14 L4 12 L10 10 Z" />
           </svg>
         </div>
-        <h1 style={{ fontSize: 28, fontWeight: 700, color: "#3B1F0F", letterSpacing: "-0.4px", margin: 0 }}>AI Analysis</h1>
+        <h1 style={{ fontSize: 28, fontWeight: 700, color: "#3B1F0F", letterSpacing: "-0.4px", margin: 0 }}>Machine Learning Analysis</h1>
         <p style={{ fontSize: 13, color: "#64748b", marginTop: 8, lineHeight: 1.5, maxWidth: 560, margin: "8px auto 0" }}>
           A narrative walkthrough of the AI panel's findings — from headline numbers down to the specific charities, loops and patterns flagged for human review.
         </p>
