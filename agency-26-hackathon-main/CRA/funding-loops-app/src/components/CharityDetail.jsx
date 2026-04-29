@@ -948,9 +948,9 @@ function LoopCircleDiagram({ loop, bn, onSelectCharity }) {
     const ex = next.x + ed.x * (nodeR + 10)
     const ey = next.y + ed.y * (nodeR + 10)
 
-    const t = 0.5
-    const mx = (1-t)*(1-t)*sx + 2*(1-t)*t*ctrlX + t*t*ex
-    const my = (1-t)*(1-t)*sy + 2*(1-t)*t*ctrlY + t*t*ey
+    // Place badge at control point — always outside the arc
+    const mx = ctrlX
+    const my = ctrlY
 
     return { sx, sy, ctrlX, ctrlY, ex, ey, color, mx, my }
   })
