@@ -905,7 +905,7 @@ function LoopCircleDiagram({ loop, bn, onSelectCharity }) {
   const cx = W / 2, cy = H / 2 + (n === 2 ? 0 : 5)
   const R      = n === 2 ? 72 : n === 3 ? 88 : n <= 5 ? 84 : 78
   const nodeR  = n <= 3 ? 32 : n <= 5 ? 27 : 22
-  const CURVE  = n === 2 ? 70 : 32
+  const CURVE  = n === 2 ? 70 : n === 3 ? 52 : n <= 5 ? 42 : 36
   const bottleneck = loop.bottleneck || 0
 
   const nodes = pathBNs.map((nodeBn, i) => {
@@ -948,9 +948,11 @@ function LoopCircleDiagram({ loop, bn, onSelectCharity }) {
     const ex = next.x + ed.x * (nodeR + 10)
     const ey = next.y + ed.y * (nodeR + 10)
 
-    // Place badge at control point — always outside the arc
-    const mx = ctrlX
-    const my = ctrlY
+    // Place badge outside the arc: control point + extra outward push for n≥3
+    const badgeExtra = n === 2 ? 0 : 16
+    const bd = normVec(ctrlX - cx, ctrlY - cy)
+    const mx = ctrlX + bd.x * badgeExtra
+    const my = ctrlY + bd.y * badgeExtra
 
     return { sx, sy, ctrlX, ctrlY, ex, ey, color, mx, my }
   })
