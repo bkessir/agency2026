@@ -6,6 +6,7 @@ import NetworkGraph from "./components/NetworkGraph.jsx"
 import CharityDetail from "./components/CharityDetail.jsx"
 import EvaluationRules from "./components/EvaluationRules.jsx"
 import Services from "./components/Services.jsx"
+import IntroVideoModal from "./components/IntroVideoModal.jsx"
 
 class DetailErrorBoundary extends Component {
   constructor(props) { super(props); this.state = { error: null } }
@@ -157,11 +158,14 @@ function MainApp() {
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const [charityBN, setCharityBN] = useState(null)
   const [prevTab, setPrevTab] = useState("leaderboard")
+  const [introOpen, setIntroOpen] = useState(true)
 
   const selectCharity = (bn) => { setPrevTab(tab); setCharityBN(bn); setTab("charity") }
   const openLeaderboard = (filter = "all") => { setLeaderboardFilter(filter); setTab("leaderboard") }
 
   return (
+    <>
+      <IntroVideoModal open={introOpen} onClose={() => setIntroOpen(false)} />
     <div style={{ height: "100vh", overflow: "hidden", display: "flex", flexDirection: "column", background: "#f0f4f8" }}>
       {/* Top header */}
       <header style={{
@@ -233,6 +237,7 @@ function MainApp() {
         </div>
       </div>
     </div>
+    </>
   )
 }
 

@@ -99,7 +99,7 @@ export default function Dashboard({ onSelectCharity, onOpenLeaderboard }) {
         <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:16 }}>
           {loading
             ? [1,2,3,4].map(i => (
-                <div key={i} style={{ aspectRatio: "5 / 4", borderRadius: 14, background: "rgba(255,255,255,0.85)", boxShadow: "0 2px 10px rgba(0,0,0,0.10)" }}>
+                <div key={i} style={{ aspectRatio: "20 / 13", borderRadius: 14, background: "rgba(255,255,255,0.85)", boxShadow: "0 2px 10px rgba(0,0,0,0.10)" }}>
                   <div style={{ padding: 18 }}><Skeleton h={20} /></div>
                 </div>
               ))
@@ -115,7 +115,7 @@ export default function Dashboard({ onSelectCharity, onOpenLeaderboard }) {
                   backgroundImage: `url('/brand/kpis/${cfg.image}')`,
                   backgroundSize: "cover",
                   backgroundPosition: "center",
-                  aspectRatio: "5 / 4",
+                  aspectRatio: "20 / 13",
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "flex-end",
