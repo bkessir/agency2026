@@ -5,7 +5,7 @@ const SECTIONS = [
     id: "methodology",
     title: "Methodology",
     story:
-      "We scored loops for unusual circular funding behavior using an ensemble of four robust and complementary machine learning outlier-detection models. This approach can also be expanded to identify charity-level anomalies that may be missed at the loop layer.",
+      "We scored loops and charities for unusual circular funding behavior using an ensemble of four robust and complementary machine learning outlier-detection models.",
   },
   {
     id: "executive-summary",
