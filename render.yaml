@@ -2,7 +2,7 @@ services:
   - type: web
     name: charity-risk-intelligence
     runtime: node
-    rootDir: agency-26-hackathon-main/CRA
+    rootDir: app
     buildCommand: |
       cd funding-loops-app && npm install --legacy-peer-deps && npm run build && cd ..
       npm install

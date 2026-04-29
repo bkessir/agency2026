@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 
-const API = 'http://localhost:3000'
+const API = import.meta.env.VITE_API_URL || ''
 const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 const TIMEZONES = [
   'America/Edmonton (MT)', 'America/Vancouver (PT)', 'America/Winnipeg (CT)',

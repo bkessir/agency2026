@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 
-const API = 'http://localhost:3000'
+const API = import.meta.env.VITE_API_URL || ''
 
 const FIELD_OPTIONS = [
   { value: 'hops',            label: 'Loop Hops',                unit: 'hops',  type: 'number' },
@@ -251,7 +251,7 @@ export default function EvaluationRules() {
   return (
     <div style={{ padding: '16px 32px', maxWidth: 1100, margin: '0 auto' }}>
       <div style={{ marginBottom: 16 }}>
-        <h1 style={{ fontSize: 22, fontWeight: 800, color: '#0f172a', margin: 0 }}>Loop Evaluation Rules</h1>
+        <h1 style={{ fontSize: 22, fontWeight: 800, color: '#0f172a', margin: 0 }}>Loop Evaluation Layer</h1>
         <p style={{ fontSize: 13, color: '#64748b', marginTop: 4, maxWidth: 700 }}>
           These rules score individual <strong>circular funding loops</strong> detected in CRA T3010 filings — not the charity overall.
           Each rule tests a loop attribute (hops, bottleneck $, active years, etc.) and adjusts that loop's <strong>suspicion score (0–10)</strong>.
