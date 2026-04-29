@@ -1024,6 +1024,11 @@ const server = http.createServer(async (req, res) => {
     // GET /api/rules
     if (req.method === 'GET' && pathname === '/api/rules') {
       setCORSHeaders(res);
+      if (mock) {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify([]));
+        return;
+      }
       try {
         const rules = await loadRules();
         res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -1047,6 +1052,7 @@ const server = http.createServer(async (req, res) => {
     // POST /api/rules — create rule
     if (req.method === 'POST' && pathname === '/api/rules') {
       setCORSHeaders(res);
+      if (mock) { res.writeHead(503, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'No database in demo mode' })); return; }
       try {
         const b = await readBody();
         const maxOrder = await db.query('SELECT COALESCE(MAX(sort_order),0)+1 AS n FROM cra.scoring_rules');
@@ -1070,6 +1076,7 @@ const server = http.createServer(async (req, res) => {
     // PUT /api/rules/:id — update rule
     if (req.method === 'PUT' && rulesMatch) {
       setCORSHeaders(res);
+      if (mock) { res.writeHead(503, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'No database in demo mode' })); return; }
       const id = rulesMatch[1];
       try {
         const b = await readBody();
@@ -1096,6 +1103,7 @@ const server = http.createServer(async (req, res) => {
     // DELETE /api/rules/:id
     if (req.method === 'DELETE' && rulesMatch) {
       setCORSHeaders(res);
+      if (mock) { res.writeHead(503, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'No database in demo mode' })); return; }
       const id = rulesMatch[1];
       try {
         await db.query('DELETE FROM cra.scoring_rules WHERE id=$1', [id]);
@@ -1112,6 +1120,7 @@ const server = http.createServer(async (req, res) => {
     // POST /api/rules/reset — restore defaults
     if (req.method === 'POST' && pathname === '/api/rules/reset') {
       setCORSHeaders(res);
+      if (mock) { res.writeHead(503, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'No database in demo mode' })); return; }
       try {
         await db.query('DELETE FROM cra.scoring_rules');
         for (const r of DEFAULT_RULES) {
