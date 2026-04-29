@@ -1,0 +1,33 @@
+services:
+  - type: web
+    name: charity-risk-intelligence
+    runtime: node
+    rootDir: agency-26-hackathon-main/CRA
+    buildCommand: |
+      cd funding-loops-app && npm install --legacy-peer-deps && npm run build && cd ..
+      npm install
+    startCommand: node visualizations/server.js
+    healthCheckPath: /api/stats
+    envVars:
+      - key: DB_CONNECTION_STRING
+        sync: false          # Set this manually in Render dashboard
+      - key: NODE_ENV
+        value: production
+
+  - type: web
+    name: cra-db-migration
+    runtime: node
+    rootDir: migration
+    buildCommand: npm install
+    startCommand: node index.js
+    envVars:
+      - key: SOURCE_DB
+        sync: false   # Set in Render dashboard: hackathon shared DB URL
+      - key: TARGET_DB
+        sync: false   # Set in Render dashboard: your new Render DB URL
+
+databases:
+  - name: charity-risk-db
+    databaseName: hackathon
+    user: hackathon_user
+    plan: free
