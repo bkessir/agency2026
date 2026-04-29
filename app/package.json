@@ -4,6 +4,11 @@
   "description": "AIM Pronghorn 404 — Agency 2026 hackathon app (CRA T3010 circular-gifting visualization)",
   "main": "visualizations/server.js",
   "scripts": {
+    "start": "node visualizations/server.js",
+    "build:frontend": "cd funding-loops-app && npm install --legacy-peer-deps && npm run build",
+    "build": "npm run build:frontend",
+    "dev:frontend": "cd funding-loops-app && npm run dev",
+    "dev:server": "node visualizations/server.js",
     "migrate": "node scripts/01-migrate.js",
     "seed": "node scripts/02-seed-codes.js",
     "fetch": "node scripts/03-fetch-data.js",
