@@ -271,9 +271,20 @@ async function ensureRulesTable() {
 }
 
 async function loadRules() {
-  const { rows } = await db.query('SELECT * FROM cra.scoring_rules ORDER BY sort_order ASC, id ASC');
-  rulesCache = rows;
-  return rows;
+  try {
+    const { rows } = await db.query('SELECT * FROM cra.scoring_rules ORDER BY sort_order ASC, id ASC');
+    rulesCache = rows;
+    return rows;
+  } catch (err) {
+    // Table might not exist yet — try to create it and seed defaults
+    if (err.message && err.message.includes('scoring_rules')) {
+      await ensureRulesTable();
+      const { rows } = await db.query('SELECT * FROM cra.scoring_rules ORDER BY sort_order ASC, id ASC');
+      rulesCache = rows;
+      return rows;
+    }
+    throw err;
+  }
 }
 
 function getRuleBreakdown(loop, ctx) {

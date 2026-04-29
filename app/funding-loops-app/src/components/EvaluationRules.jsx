@@ -179,10 +179,12 @@ export default function EvaluationRules() {
       setLoading(true)
       const r = await fetch(`${API}/api/rules`)
       const data = await r.json()
+      if (!r.ok) throw new Error(data?.error || `Server error ${r.status}`)
+      if (!Array.isArray(data)) throw new Error('Invalid response from server')
       setRules(data)
       setError(null)
     } catch (e) {
-      setError('Could not load rules — is the server running?')
+      setError(`Could not load rules — ${e.message}`)
     } finally {
       setLoading(false)
     }
