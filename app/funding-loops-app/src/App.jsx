@@ -202,10 +202,20 @@ function MainApp() {
             <span style={{ display:"block", width:18, height:2, background:"#64748b", borderRadius:2 }} />
             <span style={{ display:"block", width:18, height:2, background:"#64748b", borderRadius:2 }} />
           </button>
-          <img src="/brand/pronghorn-head.png" alt="AIM Pronghorn 404" style={{ height: 32, width: "auto", display: "block" }} />
-          <div style={{ fontSize: 17, fontWeight: 700, color: "#3B1F0F", letterSpacing: "-0.3px" }}>
-            AIM Pronghorn 404 <span style={{ color: "#C47A2C" }}>Agency 2026</span>
-          </div>
+          <button
+            onClick={() => setTab("dashboard")}
+            aria-label="Go to dashboard"
+            style={{
+              display: "flex", alignItems: "center", gap: 12,
+              background: "transparent", border: "none", padding: 0,
+              cursor: "pointer", fontFamily: "inherit",
+            }}
+          >
+            <img src="/brand/pronghorn-head.png" alt="AIM Pronghorn 404" style={{ height: 32, width: "auto", display: "block" }} />
+            <div style={{ fontSize: 17, fontWeight: 700, color: "#3B1F0F", letterSpacing: "-0.3px" }}>
+              AIM Pronghorn 404 <span style={{ color: "#C47A2C" }}>Agency 2026</span>
+            </div>
+          </button>
         </div>
         <div style={{ fontSize: 11, color: "#94a3b8" }}>CRA T3010 · 2020–2024 · ~85K Registered Charities · <span style={{ color: "#C47A2C" }}>v1.1</span></div>
       </header>
